@@ -184,7 +184,7 @@
 
       container.innerHTML =
         `Llevamos juntos: <b>${daysTogether}</b> días<br>` +
-        `Próximo aniversario (${eventDate.toLocaleDateString()}): <b>${days}d ${pad2(hours)}h ${pad2(mins)}m ${pad2(secs)}s</b>`;
+        `Próximo aniversario: <b>${days}d ${pad2(hours)}h ${pad2(mins)}m ${pad2(secs)}s</b>`;
       container.classList.add('visible');
     }
 
