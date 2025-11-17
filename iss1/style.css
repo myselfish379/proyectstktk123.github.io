@@ -253,4 +253,93 @@ body::before {
     filter: drop-shadow(0 0 14px #ff7abf66);
   }
 }
+/* ----------------- ANIMACIÓN DE ENTRADA DEL ÁRBOL ----------------- */
+.tree-enter {
+  opacity: 0;
+  transform: scale(0.72) translateY(28px) rotate(-3deg);
+  animation: treeEnter 1.2s cubic-bezier(.18,.85,.45,1.12) forwards;
+  will-change: transform, opacity, filter;
+  filter: drop-shadow(0 0 26px rgba(255,90,150,0.28));
+}
+
+@keyframes treeEnter {
+  0% {
+    opacity: 0;
+    transform: scale(0.72) translateY(28px) rotate(-6deg);
+    filter: drop-shadow(0 0 0 rgba(255,90,150,0));
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-6px) rotate(1deg);
+    filter: drop-shadow(0 0 28px rgba(255,90,150,0.28));
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+    filter: drop-shadow(0 0 14px rgba(255,90,150,0.18));
+  }
+}
+
+/* ----------------- PARTÍCULAS (pétalos / corazones) ----------------- */
+#floating-objects { pointer-events: none; overflow: visible; }
+
+.particle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  opacity: 0.95;
+  will-change: transform, opacity;
+  pointer-events: none;
+  transform-origin: center;
+  display: block;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffd6e0 40%, #ff6b9a 100%);
+  filter: drop-shadow(0 4px 10px rgba(255,80,140,0.18));
+}
+
+/* variante corazón (si quieres formas un poco diferentes) */
+.particle.heart {
+  width: 18px;
+  height: 16px;
+  border-radius: 40% 40% 50% 50% / 50% 50% 40% 40%;
+  background: linear-gradient(135deg,#ff6b9a,#ff2f6f);
+}
+
+/* animación CSS ligera para rotación (complementaria al JS) */
+@media (prefers-reduced-motion: no-preference) {
+  .particle { animation: particle-wobble 3s ease-in-out infinite; }
+  @keyframes particle-wobble {
+    0% { transform: rotate(-8deg); }
+    50% { transform: rotate(8deg); }
+    100% { transform: rotate(-8deg); }
+  }
+}
+
+/* Respeta usuarios con preferencia de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .tree-enter { animation-duration: 0.001s; transform: none; opacity: 1; filter: none; }
+  .particle { animation: none !important; display: none; }
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  background-color: #12000a; /* color de fondo de tu gradient */
+  overscroll-behavior: none;
+}
+
+/* Corrección específica móvil */
+@supports (-webkit-touch-callout: none) {
+  html, body {
+    min-height: 100vh;
+  }
+}
+
+body {
+  margin: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  background-attachment: fixed;
+}
+
+
 
