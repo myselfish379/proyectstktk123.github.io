@@ -1,0 +1,373 @@
+/*© Zero - Código libre no comercial*/
+
+:root{
+  --max-width: 600px;
+  --gutter: clamp(0.8rem, 4vw, 1.6rem);
+  --space: 1rem;
+  --bg-glass: rgba(255,255,255,0.88);
+  --accent: #e60026;
+  --text: #111;
+  --muted: #666;
+  --radius: 12px;
+  --line: 1.6;
+  --tree-size-desktop: 420px;
+  --tree-size-mobile: 72vmin;
+}
+
+/* Reset ligero */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--text);background:transparent}
+
+/* Contenedor principal centrado con padding y ancho máximo */
+.main-container{
+  max-width:var(--max-width);
+  margin:0 auto;
+  padding:var(--gutter);
+  display:block;
+}
+
+/* Espaciado vertical consistente entre secciones */
+.main-container > *{margin-top:var(--space)}
+.main-container > *:first-child{margin-top:0}
+
+/* Dedicatoria: mejor legibilidad, centrado e interlineado */
+.dedication-text{
+  text-align:center;
+  line-height:var(--line);
+  font-size:1.05rem;
+  padding:0.9rem 1rem;
+  background:var(--bg-glass);
+  border-radius:var(--radius);
+  box-shadow:0 10px 24px rgba(0,0,0,0.06);
+  max-width:100%;
+  margin-left:auto;margin-right:auto;
+  color:var(--text);
+  word-break:break-word;
+}
+
+/* Firma / subtítulo */
+.signature{
+  display:block;
+  margin:0.6rem auto 0 auto;
+  text-align:center;
+  color:var(--accent);
+  font-weight:600;
+}
+
+/* Wrapper para centrar el árbol con separación */
+.tree-wrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:calc(var(--space) * 0.6);
+  margin-bottom:calc(var(--space) * 0.8);
+}
+
+/* Contenedor del SVG del árbol: tamaño fijo, centrado y separación respecto al texto */
+.tree-container{
+  width: min(var(--tree-size-desktop), 88vw);
+  height: auto;
+  max-width:100%;
+  pointer-events:none;
+  margin:0 auto;
+  box-shadow:0 18px 40px rgba(0,0,0,0.08);
+  border-radius:8px;
+  overflow:visible;
+}
+
+/* Si insertas el svg directamente dentro, que escale correctamente */
+.tree-container svg{width:100%;height:auto;display:block}
+
+/* Estilos para móviles: ajustar tamaño del árbol y posiciones absolutas existentes */
+@media (max-width:700px){
+  body{font-size:16px}
+  .tree-container{
+    width: min(var(--tree-size-mobile), 92vw);
+    height: auto;
+    max-width:98vw;
+    min-width:180px;
+    min-height:180px;
+    position: absolute;
+    top:48%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:2;
+  }
+
+  .tree-container svg{width:100%;height:100%;display:block}
+
+  .dedication-text{
+    position: absolute;
+    top:7vw;
+    left:50%;
+    transform:translateX(-50%);
+    max-width:92vw;
+    font-size:1.05rem;
+    z-index:3;
+    opacity:1;
+    pointer-events:none;
+    background:var(--bg-glass);
+  }
+
+  .signature{
+    position:static;
+    margin:2.2em auto 0 auto;
+    font-size:1.1rem;
+    opacity:1;
+    z-index:5;
+    text-align:center;
+  }
+}
+
+/* Contador: fondo semitransparente, padding, borde redondeado y centrado */
+.countdown-wrapper{ text-align:center; }
+.countdown{
+  display:inline-block;
+  margin:0 auto;
+  text-align:center;
+  background: rgba(255,255,255,0.92);
+  padding:0.65rem 1rem;
+  border-radius:14px;
+  box-shadow:0 10px 26px rgba(0,0,0,0.06);
+  font-weight:600;
+  min-width:180px;
+  line-height:1.2;
+  pointer-events:none;
+}
+
+/* Versión fija/absoluta del countdown (mantener compatibilidad con tu layout actual) */
+.countdown.fixed{
+  position:fixed;
+  left:50%;
+  bottom:1.2rem;
+  transform:translateX(-50%);
+  z-index:6;
+}
+
+/* Visibilidad y animación suave del contador */
+.countdown{transition:opacity .45s ease, transform .45s cubic-bezier(.22,.9,.35,1); opacity:1}
+.countdown.hidden{opacity:0; transform:translateY(12px)}
+
+/* Botón flotante de audio (opcional) */
+.audio-toggle{
+  position:fixed;
+  right:1rem;
+  bottom:1rem;
+  z-index:8;
+  width:44px;height:44px;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+  border:none;cursor:pointer;
+}
+.audio-toggle:focus{outline:2px solid rgba(230,0,38,0.22)}
+
+/* Pétalos y objetos flotantes */
+.floating-petal{width:13px;height:18px}
+
+/* Consistencia vertical: pequeños márgenes en hijos directos */
+.tree-wrapper + .dedication-text,
+.dedication-text + .tree-wrapper{margin-top:calc(var(--space) * 1.1)}
+
+/* Responsive tweaks */
+@media (max-width:420px){
+  :root{--gutter:0.8rem;--space:0.8rem}
+  .countdown{min-width:56vw;padding:.5rem .7rem}
+  .dedication-text{font-size:0.98rem;padding:.65rem .85rem}
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+  .tree-container{transition:none}
+}
+``` 
+
+¿Lo aplico yo ahora (reemplazar el archivo) o prefieres pegarlo manualmente?// filepath: /home/tokitoki/vscode/iss3/style.mobile.css
+/*© Zero - Código libre no comercial*/
+
+:root{
+  --max-width: 600px;
+  --gutter: clamp(0.8rem, 4vw, 1.6rem);
+  --space: 1rem;
+  --bg-glass: rgba(255,255,255,0.88);
+  --accent: #e60026;
+  --text: #111;
+  --muted: #666;
+  --radius: 12px;
+  --line: 1.6;
+  --tree-size-desktop: 420px;
+  --tree-size-mobile: 72vmin;
+}
+
+/* Reset ligero */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--text);background:transparent}
+
+/* Contenedor principal centrado con padding y ancho máximo */
+.main-container{
+  max-width:var(--max-width);
+  margin:0 auto;
+  padding:var(--gutter);
+  display:block;
+}
+
+/* Espaciado vertical consistente entre secciones */
+.main-container > *{margin-top:var(--space)}
+.main-container > *:first-child{margin-top:0}
+
+/* Dedicatoria: mejor legibilidad, centrado e interlineado */
+.dedication-text{
+  text-align:center;
+  line-height:var(--line);
+  font-size:1.05rem;
+  padding:0.9rem 1rem;
+  background:var(--bg-glass);
+  border-radius:var(--radius);
+  box-shadow:0 10px 24px rgba(0,0,0,0.06);
+  max-width:100%;
+  margin-left:auto;margin-right:auto;
+  color:var(--text);
+  word-break:break-word;
+}
+
+/* Firma / subtítulo */
+.signature{
+  display:block;
+  margin:0.6rem auto 0 auto;
+  text-align:center;
+  color:var(--accent);
+  font-weight:600;
+}
+
+/* Wrapper para centrar el árbol con separación */
+.tree-wrapper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:calc(var(--space) * 0.6);
+  margin-bottom:calc(var(--space) * 0.8);
+}
+
+/* Contenedor del SVG del árbol: tamaño fijo, centrado y separación respecto al texto */
+.tree-container{
+  width: min(var(--tree-size-desktop), 88vw);
+  height: auto;
+  max-width:100%;
+  pointer-events:none;
+  margin:0 auto;
+  box-shadow:0 18px 40px rgba(0,0,0,0.08);
+  border-radius:8px;
+  overflow:visible;
+}
+
+/* Si insertas el svg directamente dentro, que escale correctamente */
+.tree-container svg{width:100%;height:auto;display:block}
+
+/* Estilos para móviles: ajustar tamaño del árbol y posiciones absolutas existentes */
+@media (max-width:700px){
+  body{font-size:16px}
+  .tree-container{
+    width: min(var(--tree-size-mobile), 92vw);
+    height: auto;
+    max-width:98vw;
+    min-width:180px;
+    min-height:180px;
+    position: absolute;
+    top:48%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    z-index:2;
+  }
+
+  .tree-container svg{width:100%;height:100%;display:block}
+
+  .dedication-text{
+    position: absolute;
+    top:7vw;
+    left:50%;
+    transform:translateX(-50%);
+    max-width:92vw;
+    font-size:1.05rem;
+    z-index:3;
+    opacity:1;
+    pointer-events:none;
+    background:var(--bg-glass);
+  }
+
+  .signature{
+    position:static;
+    margin:2.2em auto 0 auto;
+    font-size:1.1rem;
+    opacity:1;
+    z-index:5;
+    text-align:center;
+  }
+}
+
+/* Contador: fondo semitransparente, padding, borde redondeado y centrado */
+.countdown-wrapper{ text-align:center; }
+.countdown{
+  display:inline-block;
+  margin:0 auto;
+  text-align:center;
+  background: rgba(255,255,255,0.92);
+  padding:0.65rem 1rem;
+  border-radius:14px;
+  box-shadow:0 10px 26px rgba(0,0,0,0.06);
+  font-weight:600;
+  min-width:180px;
+  line-height:1.2;
+  pointer-events:none;
+}
+
+/* Versión fija/absoluta del countdown (mantener compatibilidad con tu layout actual) */
+.countdown.fixed{
+  position:fixed;
+  left:50%;
+  bottom:1.2rem;
+  transform:translateX(-50%);
+  z-index:6;
+}
+
+/* Visibilidad y animación suave del contador */
+.countdown{transition:opacity .45s ease, transform .45s cubic-bezier(.22,.9,.35,1); opacity:1}
+.countdown.hidden{opacity:0; transform:translateY(12px)}
+
+/* Botón flotante de audio (opcional) */
+.audio-toggle{
+  position:fixed;
+  right:1rem;
+  bottom:1rem;
+  z-index:8;
+  width:44px;height:44px;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.88));
+  box-shadow:0 8px 20px rgba(0,0,0,0.12);
+  border:none;cursor:pointer;
+}
+.audio-toggle:focus{outline:2px solid rgba(230,0,38,0.22)}
+
+/* Pétalos y objetos flotantes */
+.floating-petal{width:13px;height:18px}
+
+/* Consistencia vertical: pequeños márgenes en hijos directos */
+.tree-wrapper + .dedication-text,
+.dedication-text + .tree-wrapper{margin-top:calc(var(--space) * 1.1)}
+
+/* Responsive tweaks */
+@media (max-width:420px){
+  :root{--gutter:0.8rem;--space:0.8rem}
+  .countdown{min-width:56vw;padding:.5rem .7rem}
+  .dedication-text{font-size:0.98rem;padding:.65rem .85rem}
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{transition:none!important;animation:none!important}
+  .tree-container{transition:none}
+}
+``` 
+
