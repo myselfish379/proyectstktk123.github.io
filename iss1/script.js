@@ -86,7 +86,7 @@
     const textParam = getURLParam('text');
     const firmaParam = getURLParam('firma');
 
-    const defaultText = "Para el amor de mi vida:\n\nno fue desde un inicio. pero fue suficiente para darme cuenta que el amor en vida propia eras tu. con cada parte de ti, tu voz, tu sonrisa, esos ojitos... estuviste en cada paso, en cada desgracia, incluso en cada risa, sonrisa. y siempre desee que estuvieras a mi lado.quizas este mundo no fue hecho para nosotros. pero si para demostrarnos que lo haremos nuestro.";
+    const defaultText = "Para el amor de mi vida:\n\nno tuvo que ser una eternidad. pero fue suficiente tiempo para darme cuenta que el amor en vida propia eras tu. con cada parte de ti, tu voz, tu sonrisa, y esos ojos que reflejan deseo... estuviste en cada momento, en cada desgracia, en cada risa, en cada sonrisa. y no hizo mas que avivar mi deseo por estar a tu lado. quizas parezca que este mundo no fue hecho para nosotros. pero a mi lado te demostrare que esta hecho para que lo hagamos nuestro. isabella";
     const text = textParam ? decodeURIComponent(textParam).slice(0, 400) : defaultText;
     const firma = firmaParam ? decodeURIComponent(firmaParam).slice(0, 100) : "Con amor, el amor de tu vida";
 
