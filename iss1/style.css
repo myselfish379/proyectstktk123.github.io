@@ -1,196 +1,233 @@
+/*© Zero - Código libre no comercial*/
+
+/* Variables y notas de diseño */
+:root{
+  --max-width: 600px;
+  --gutter: clamp(0.8rem, 4vw, 1.4rem);
+  --space: 1rem;
+  --bg-1: #fff5f8;
+  --bg-2: #f5f0ff;
+  --glass: rgba(255,255,255,0.88);
+  --accent: #e60026;
+  --text: #111;
+  --muted: #666;
+  --radius: 12px;
+  --line: 1.6;
+  --tree-size-mobile: 72vmin;
+  --tree-size-desktop: 420px;
+}
+
+/* Reset ligero y base */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; -webkit-font-smoothing: antialiased; }
 body {
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background: #fcfcfc;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, var(--bg-1) 0%, #ffeef8 60%, var(--bg-2) 100%);
+  font-size: 16px;
+  line-height: var(--line);
+  min-height: 100vh;
+  overflow: hidden;
 }
 
-#fireworks-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: block;
-    z-index: 1;
-    pointer-events: none;
+/* Contenedor principal centrado con ancho máximo y padding */
+.main-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--gutter);
 }
 
-#center-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 5rem;
-    color: #e60026;
-    font-family: 'Arial Black', Arial, sans-serif;
-    text-shadow: 2px 2px 8px #ffb3b3;
-    z-index: 2;
-    letter-spacing: 0.5rem;
-    user-select: none;
-    display: flex;
-    gap: 0.5rem;
-    pointer-events: none;
-}
+/* Espaciado vertical consistente */
+.main-container > * { margin-top: var(--space); }
+.main-container > *:first-child { margin-top: 0; }
 
-.letter {
-    opacity: 0;
-    transition: opacity 0.5s;
-}
-
-.tree-container {
-  /* Asegura que el contenedor tenga el nuevo tamaño */
-  width: 520px !important;
-  height: 520px !important;
-  /* Centrado absoluto */
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-}
-
-.tree-container svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.tree-container svg path {
-  transition: fill-opacity 0.5s, stroke-dashoffset 1.2s;
-}
-
-.tree-container svg.move-and-scale {
-  transition: transform 1.2s cubic-bezier(.77,0,.18,1);
-  transform: translateX(200px) scale(1.35);
-}
-
+/* Dedicatoria: legibilidad, centrado y apariencia "glass" */
 .dedication-text {
-  position: absolute;
-  top: 50%;
-  left: 3%;
-  right: auto;
-  transform: translateY(-50%);
-  min-width: 320px;
-  max-width: 600px;
-  width: 60rem;
-  font-size: 1.5rem;
-  color: #050505;
-  font-family: 'Courier New', Courier, monospace;
-  white-space: pre-line;
+  position: absolute;            /* por defecto pensado para móviles; cambiar a relative si no quieres solapamientos */
+  top: 7vw;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 92vw;
+  padding: 0.8rem 1rem;
+  font-size: 1.03rem;
+  text-align: center;
+  color: var(--text);
+  background: var(--glass);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
   z-index: 3;
-  opacity: 0;
+  white-space: pre-line;
   pointer-events: none;
-  max-height: 90vh;
-  overflow: visible;
-  padding: 1em 1.5em 1em 1em;
-  background: rgba(255,255,255,0.92);
-  border-radius: 0.7em;
-  box-shadow: 0 2px 16px #e6002611;
-  /* Permite que la caja crezca en altura y ancho */
-  transition: max-width 0.4s, min-width 0.4s, width 0.4s;
 }
 
-.dedication-text.typing {
-  opacity: 1;
-  animation: fadeInText 0.6s;
-}
-
-@keyframes fadeInText {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-#floating-objects {
-  position: fixed;
-  left: 0; top: 0;
-  width: 100vw; height: 100vh;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.floating-petal {
-  position: absolute;
-  will-change: transform, opacity;
-  opacity: 0.85;
-  pointer-events: none;
-  width: 24px; height: 32px;
-  background: radial-gradient(ellipse at 60% 30%, #ffd6e0 60%, #ff69b4 100%);
-  border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
-}
-
+/* Firma / subtítulo (aparece después de la máquina de escribir) */
 .signature {
-  /* Cambia posición absoluta a relativa y pon margen arriba */
-  position: relative;
-  top: auto;
-  left: auto;
-  bottom: auto;
-  margin-top: 1.5em;
-  margin-left: 0;
+  position: static;
   display: block;
-  font-family: 'Dancing Script', 'Pacifico', cursive, sans-serif;
-  font-size: 2.2rem;
-  color: #e60026;
+  margin: 2.2em auto 0 auto;
+  font-size: 1.25rem;
+  color: var(--accent);
   opacity: 0;
   z-index: 5;
-  white-space: pre;
   pointer-events: none;
-  transition: opacity 0.7s;
+  transition: opacity 0.7s ease;
+  text-align: center;
+  white-space: pre;
 }
 
-.signature.visible {
-  opacity: 1;
-  animation: signature-draw 2.2s steps(24) forwards;
+/* Wrapper para centrar el árbol (evita dependencias de position absoluta) */
+.tree-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: calc(var(--space) * 0.4);
+  margin-bottom: calc(var(--space) * 0.6);
 }
 
-@keyframes signature-draw {
-  from { clip-path: inset(0 100% 0 0); }
-  to   { clip-path: inset(0 0 0 0); }
+/* Contenedor del SVG del árbol: centrado, responsivo y sin uso de !important */
+.tree-container {
+  width: min(var(--tree-size-desktop), 88vw);
+  height: auto;
+  max-width: 100%;
+  margin: 0 auto;
+  pointer-events: none;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: visible;
 }
 
+/* Si intracenas el SVG inline, que escale bien */
+.tree-container svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Animación de desplazamiento/escalado utilizada en móviles */
+.tree-container svg.move-and-scale {
+  transition: transform 1.2s cubic-bezier(.77,0,.18,1);
+  transform: translateY(60px) scale(1.18);
+}
+
+/* Countdown: fondo semitransparente, padding, borde redondeado y centrado */
+.countdown-wrapper { text-align: center; }
 .countdown {
+  display: inline-block;
+  text-align: center;
+  background: rgba(255,255,255,0.92);
+  padding: 0.55rem 0.9rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+  font-weight: 600;
+  min-width: 160px;
+  line-height: 1.2;
+  pointer-events: none;
+  transition: opacity .45s ease, transform .45s cubic-bezier(.22,.9,.35,1);
+  opacity: 0;
+  transform: translateY(12px);
+  z-index: 6;
+}
+.countdown.visible { opacity: 1; transform: none; }
+
+/* Versión fija para el countdown (si prefieres) */
+.countdown.fixed {
   position: fixed;
   left: 50%;
-  bottom: 3%;
+  bottom: 10vw;
   transform: translateX(-50%);
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 1.6rem;
-  color: #333;
-  background: #fff8;
-  padding: 0.4em 1em;
-  border-radius: 1em;
   z-index: 6;
-  box-shadow: 0 2px 8px #e6002611;
-  pointer-events: none;
-  letter-spacing: 0.05em;
-  min-width: 220px;
-  text-align: center;
-  transition: opacity 0.8s cubic-bezier(.77,0,.18,1), transform 0.8s cubic-bezier(.77,0,.18,1);
-  opacity: 0;
-  transform: translateX(-50%) translateY(30px);
 }
 
-.countdown.visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+/* ...existing code... */
+/* Botón flotante de audio — moved left & color más llamativo */
+.audio-toggle {
+  position: fixed;
+  left: 1rem;
+  right: auto;
+  bottom: 1rem;
+  z-index: 999;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff3366 0%, #ff6b8a 100%);
+  box-shadow: 0 12px 30px rgba(255,51,102,0.28), 0 4px 12px rgba(0,0,0,0.12);
+  border: none;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, opacity .12s ease;
+  color: #fff;
 }
 
-/* Responsivo para móviles: la caja ocupa casi todo el ancho arriba del árbol */
+/* hover/active/focus */
+.audio-toggle:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(255,51,102,0.30); }
+.audio-toggle:active { transform: translateY(-1px); }
+.audio-toggle:focus { outline: 3px solid rgba(255,183,197,0.25); outline-offset: 2px; }
+
+/* Forzar iconos en blanco para mejor contraste */
+.audio-toggle svg path,
+.audio-toggle svg rect,
+.audio-toggle svg circle { fill: #ffffff !important; stroke: none !important; }
+
+/* Estado "pressed" opcional (cuando suena) */
+.audio-toggle[aria-pressed="true"] {
+  box-shadow: 0 18px 46px rgba(255,51,102,0.36), 0 6px 18px rgba(0,0,0,0.14);
+  transform: translateY(-4px) scale(1.02);
+}
+/* ...existing code... */
+.audio-toggle:focus { outline: 2px solid rgba(230,0,38,0.22); }
+
+/* Pétalos u objetos flotantes */
+.floating-petal { width: 13px; height: 18px; }
+
+/* Consistencia vertical entre árbol y dedicatoria */
+.tree-wrapper + .dedication-text,
+.dedication-text + .tree-wrapper { margin-top: calc(var(--space) * 1.1); }
+
+/* Responsive: ajustes para pantallas pequeñas */
 @media (max-width: 700px) {
-  .dedication-text {
+  body { font-size: 16px; }
+  .tree-container {
+    width: min(var(--tree-size-mobile), 92vw);
+    min-width: 180px;
+    min-height: 180px;
+    position: absolute;
+    top: 48%;
     left: 50%;
-    right: auto;
-    top: 8%;
-    transform: translateX(-50%) translateY(0);
-    min-width: 0;
-    max-width: 95vw;
-    width: 95vw;
-    font-size: 1.1rem;
-    padding: 0.7em 0.7em 0.7em 0.7em;
+    transform: translate(-50%, -50%);
+    z-index: 2;
   }
-  .signature {
-    font-size: 1.3rem;
+  .tree-container svg { width: 100%; height: 100%; display: block; }
+
+  .dedication-text {
+    top: 7vw;
+    font-size: 1.05rem;
+    pointer-events: none;
   }
+}
+
+/* Si prefieres evitar absolute en móviles muy pequeños, usa flujo normal */
+@media (max-width: 420px) {
+  .tree-container {
+    position: relative;
+    margin: 2.4rem auto 1.2rem;
+    transform: none;
+    top: auto;
+    left: auto;
+  }
+  .dedication-text {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin-top: 0.4rem;
+    pointer-events: auto;
+  }
+}
+
+/* Reducir animaciones para usuarios que lo prefieran */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  .tree-container { transition: none !important; }
 }
