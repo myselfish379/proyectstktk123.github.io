@@ -1,121 +1,46 @@
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>para isabellita</title>
   <meta name="author" content="el amor de tu vida" />
-  
+  <meta name="description" content="Árbol de Amor Animado - una sorpresa interactiva" />
 
-  <!-- Estilos externos -->
+  <!-- Estilo principal (unificado) -->
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="style.css" media="only screen and (max-width: 600px)" />
-
-  <style>
-    /* Ajustes rápidos locales (puedes moverlos a style.css) */
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: #222;
-      /* Fondo degradado */
-      background: linear-gradient(135deg, #fff5f8 0%, #ffeef8 60%, #f5f0ff 100%);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      overflow: hidden;
-    }
-
-    .tree-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 400px;
-      height: 400px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .dedication-text {
-      position: fixed;
-      top: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      z-index: 5;
-      max-width: 90%;
-      padding: 0.5rem 1rem;
-      background: rgba(255,255,255,0.6);
-      border-radius: 12px;
-      backdrop-filter: blur(4px);
-    }
-
-    .countdown {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 5;
-      background: rgba(255,255,255,0.7);
-      padding: 0.5rem 0.8rem;
-      border-radius: 10px;
-      font-weight: 600;
-    }
-
-    @keyframes beat {
-      0%,100% { transform: scale(1); }
-      20% { transform: scale(1.1); }
-      40% { transform: scale(0.95); }
-      60% { transform: scale(1.08); }
-      80% { transform: scale(1); }
-    }
-
-    .animated-heart { transform-origin: center; animation: beat 1s infinite; }
-    noscript { display: block; text-align: center; margin-top: 1rem; color: #900; }
-  </style>
 </head>
-
 <body>
-  <div id="floating-objects" aria-hidden="true"></div>
+  <main class="main-container">
+    <div id="floating-objects" aria-hidden="true"></div>
 
-  <div class="dedication-text" id="dedication-text" aria-live="polite" role="region">
-    <!-- Texto de dedicatoria (escrito por script.js) -->
-  </div>
+    <div class="dedication-text" id="dedication-text" aria-live="polite" role="region"></div>
 
-  <div class="tree-container" id="tree-container" aria-hidden="false" role="img" aria-label="Árbol con corazones animados"></div>
+    <div class="tree-wrapper">
+      <div class="tree-container" id="tree-container" role="img" aria-label="Árbol con corazones animados"></div>
+    </div>
 
-  <div class="countdown" id="countdown" aria-live="polite" role="status"></div>
+    <div class="countdown-wrapper">
+      <div class="countdown" id="countdown" role="status" aria-live="polite"></div>
+    </div>
+  </main>
 
-  <!-- Audio: autoplay + muted para evitar bloqueo. Se intentará desmutear al primer interaction -->
-  <audio id="bg-music" src="music1.mp3" autoplay muted loop preload="auto"></audio>
+  <!-- Audio (elemento presente; script gestiona autoplay/fallback) -->
+  <audio id="bg-music" src="music1.mp3" preload="auto"></audio>
 
-  <noscript>
-    Esta página funciona mejor con JavaScript activado. La animación y música no estarán disponibles sin JS.
-  </noscript>
+  <!-- Botón de control de audio (a la izquierda) -->
+  <button id="audio-toggle" class="audio-toggle" aria-pressed="false" title="Reproducir / Pausar música" aria-label="Control de música">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path id="icon-play" d="M6 4v16l12-8z" fill="#fff"></path>
+      <g id="icon-pause" style="display:none">
+        <rect x="6" y="5" width="4" height="14" fill="#fff"></rect>
+        <rect x="14" y="5" width="4" height="14" fill="#fff"></rect>
+      </g>
+    </svg>
+  </button>
 
-  <!-- Script principal -->
+  <!-- Script principal (deferred) -->
   <script src="script.js" defer></script>
-
-  <!-- Intento de activar sonido (desmutear) en la primera interacción del usuario -->
-  <script>
-    (function() {
-      const audio = document.getElementById('bg-music');
-      if (!audio) return;
-      function enableSound() {
-        try {
-          audio.muted = false;
-          audio.volume = 0.7;
-          audio.play().catch(()=>{ /* autoplay con sonido puede ser bloqueado */ });
-        } catch (e) { /* ignorar */ }
-      }
-      // Escuchar interacción única
-      window.addEventListener('pointerdown', enableSound, { once: true });
-      window.addEventListener('keydown', enableSound, { once: true });
-      // Intento rápido al cargar (puede fallar si bloqueado)
-      window.addEventListener('load', () => { audio.play().catch(()=>{}); });
-    })();
-  </script>
 </body>
-
 </html>
