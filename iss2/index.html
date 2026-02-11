@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>isabelita</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+
+body {
+  margin: 0;
+  height: 100vh;
+  background-color: #fff5f5;
+  font-family: 'Courier Prime', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Cuadro central */
+#cuadro {
+  position: relative;
+  width: 400px;
+  max-width: 90%;
+  background: url('assets/tu-imagen.png') no-repeat center/cover;
+  border-radius: 20px;
+  padding: 40px 20px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Título */
+#titulo {
+  font-size: 2em;
+  color: red;
+  margin-bottom: 20px;
+}
+
+/* Texto con corazón */
+#texto {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  color: #3E2723;
+}
+
+#texto span {
+  margin-left: 8px;
+  color: #ff3b6e;
+}
+
+#cuadro {
+  position: relative;
+  width: 400px;
+  max-width: 90%;
+  background: url('assets/romantic.jpg') no-repeat center/cover;
+  border-radius: 20px;
+  padding: 40px 20px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+#cuadro .overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255,255,255,0.5); /* blanca semitransparente */
+  z-index: 1;
+}
+
+#cuadro h1,
+#cuadro p,
+#cuadro button {
+  position: relative;
+  z-index: 2; /* asegura que el texto y botón estén encima de la capa */
+}
+
+
+
+/* Botón */
+button {
+  padding: 10px 25px;
+  font-size: 1em;
+  border: none;
+  border-radius: 50px;
+  background-color: #E53935;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: transform 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+/* Corazones flotando desde la parte baja */
+.heart {
+  position: absolute;
+  bottom: 0;
+  font-size: 20px;
+  color: #ff3b6e;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-100vh); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div id="cuadro">
+  <div class="overlay"></div> <!-- capa blanca semitransparente -->
+  <h1 class="titulo">i will love you ´til the end of time</h1>
+  <p>❤️i would wait a million years.. para mi san valentin ❤️</p>
+  <button id="openBtn">abreme</button>
+</div>
+
+
+
+<script>
+// Generar corazones desde la parte baja de la pantalla
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.style.left = Math.random() * (window.innerWidth - 20) + 'px';
+  heart.style.fontSize = (10 + Math.random() * 20) + 'px';
+  heart.style.animationDuration = (4 + Math.random() * 4) + 's';
+  heart.textContent = '❤️';
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 8000);
+}
+
+// Crear corazones continuamente
+setInterval(createHeart, 500);
+
+document.getElementById("openBtn").addEventListener("click", function() {
+    window.open("https://myselfish379.github.io/proyectstktk123.github.io/iss2/index2.html", "_blank"); // reemplaza con la URL que quieras
+});
+
+</script>
+
+</body>
+</html>
