@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>juego de isabelita</title>
+<style>
+/* Fondo premium negro con rosa */
+body {
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: "Gill Sans", Calibri, sans-serif;
+  position: relative;
+  background: #0d0d0d;
+}
+body::after {
+  content: "";
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: radial-gradient(circle at bottom right, rgba(255,20,147,0.15), transparent 60%);
+  pointer-events: none;
+  z-index:0;
+}
+
+/* Fondo animado de emojis */
+#emojiBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  font-size: 24px;
+}
+
+/* Canvas juego */
+canvas {
+  display: none;
+  max-width: 100%;
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Intro y victoria */
+.contenedor {
+  width: 90%;
+  max-width: 500px;
+  margin: 10px;
+}
+.envoltura-sobre {
+  position: relative;
+  background-color: #d8a0f0;
+  box-shadow: 0 0 40px rgba(0,0,0,0.2);
+  border-radius: 20px;
+}
+.sobre { width: 100%; height: 450px; }
+.carta {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  text-align: center;
+  padding: 25px;
+  border-radius: 15px;
+}
+.contenido {
+  color: #333;
+  font-size: 16px;
+  text-align: left;
+  line-height: 1.5em;
+  height: 80%;
+  overflow-y: auto;
+  margin-bottom: 15px;
+}
+.btn-aceptar {
+  background: #a020f0;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  font-size: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.btn-aceptar:hover { background: #8000c0; }
+
+/* Controles móviles */
+#mobileControls {
+  display: none;
+  position: static;
+  width: 100%;
+  justify-content: space-around;
+  padding: 15px 30px;
+  touch-action: none;
+  z-index:2;
+  margin-bottom: 10px;
+}
+#mobileControls button {
+  width: 110px;
+  height: 110px;
+  font-size: 40px;
+  border-radius: 25px;
+  border: none;
+  background: #a020f0;
+  color: white;
+  user-select: none;
+}
+#mobileControls button:active { background: #8000c0; }
+</style>
+</head>
+<body>
+
+<!-- Fondo emojis -->
+<div id="emojiBackground"></div>
+
+<!-- Intro -->
+<div id="intro" class="contenedor">
+  <div class="envoltura-sobre">
+    <div class="sobre">
+      <div class="carta">
+        <div class="contenido">
+          <h2>💌 Bienvenida a mi juego de Stray Kids de Temu 💌</h2>
+          <p>
+            🎮 Reglas del juego:<br>
+            - Flechas ⬅️ ➡️ para mover.<br>
+            - Te daré puntos por cada Quokka.<br>
+            - Los lightsticks te darán más vida.<br>
+            - 5 fallos = pierdes.
+          </p>
+          <p style="text-align:center; margin-top:10px; font-size:14px; color:#555;">Solo si lo pasas te dejaré ver el resto de las páginas</p>
+        </div>
+        <button class="btn-aceptar" id="btnStart">Iniciar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cuadro de victoria -->
+<div id="winScreen" class="contenedor" style="display:none;">
+  <div class="envoltura-sobre">
+    <div class="sobre">
+      <div class="carta">
+        <div class="contenido">
+          <h2>🎉 ¡yo sabia que podias, mi niña! 🎉</h2>
+          <p>alcanzaste un puntaje de 55 puntos, lo prometido es deuda. te dejare ver el resto de las paginas.</p>
+        </div>
+        <button class="btn-aceptar" id="btnWinLink">Continuar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<div id="mobileControls">
+  <button id="leftBtn">⬅️</button>
+  <button id="rightBtn">➡️</button>
+</div>
+
+<script>
+const gameCanvas = document.getElementById("gameCanvas");
+const ctx = gameCanvas.getContext("2d");
+const emojiBg = document.getElementById("emojiBackground");
+
+// Detectar móvil
+function isMobile(){
+  return ('ontouchstart' in window) || navigator.maxTouchPoints > 0 || window.innerWidth < 900;
+}
+
+// --- IMÁGENES ---
+const backgroundImg = new Image(); backgroundImg.src="f1.jpg";
+const snoopyImg = new Image(); snoopyImg.src="i1.png";
+const cherryImg = new Image(); cherryImg.src="i2.jpeg";
+const strawberryImg = new Image(); strawberryImg.src="i3.jpeg";
+
+// Variables juego
+let player, foods, keysPressed, score, misses, lastSpawn;
+let gameStarted=false;
+const maxFoods=2, maxMisses=5;
+const foodSpeedBase=3, foodSpeedMax=8;
+const spawnIntervalBase=1000, spawnIntervalMin=400;
+let foodSpeed=foodSpeedBase, spawnInterval=spawnIntervalBase;
+
+// --- Canvas ---
+function resizeGameCanvas(){
+  if(isMobile()){
+    const controls = document.getElementById("mobileControls");
+    const controlsHeight = controls.offsetHeight || 160;
+    const availW = window.innerWidth;
+    const availH = window.innerHeight - controlsHeight - 40;
+    const aspect = 700/500;
+    let w = availW;
+    let h = w/aspect;
+    if(h>availH){ h = availH; w = h*aspect; }
+    gameCanvas.width = w;
+    gameCanvas.height = h;
+  } else {
+    gameCanvas.width = 700;
+    gameCanvas.height = 500;
+  }
+}
+
+// --- Reset juego ---
+function resetGame(){
+  resizeGameCanvas();
+  const scale = gameCanvas.width/700;
+  player={width:80*scale, height:80*scale, speed:10*scale, x:gameCanvas.width/2-(80*scale)/2, y:gameCanvas.height-(100*scale)};
+  foods=[];
+  keysPressed={left:false,right:false};
+  score=0;
+  misses=0;
+  lastSpawn=0;
+}
+
+// --- Controles ---
+document.addEventListener("keydown",e=>{
+  if(e.code==="ArrowLeft") keysPressed.left=true;
+  if(e.code==="ArrowRight") keysPressed.right=true;
+});
+document.addEventListener("keyup",e=>{
+  if(e.code==="ArrowLeft") keysPressed.left=false;
+  if(e.code==="ArrowRight") keysPressed.right=false;
+});
+const mobileControls=document.getElementById("mobileControls");
+if(isMobile()){
+  mobileControls.style.display="flex";
+  ["leftBtn","rightBtn"].forEach(id=>{
+    const btn=document.getElementById(id);
+    btn.addEventListener("touchstart",e=>{
+      e.preventDefault();
+      keysPressed[id==="leftBtn"?"left":"right"]=true;
+    });
+    btn.addEventListener("touchend",e=>{
+      e.preventDefault();
+      keysPressed[id==="leftBtn"?"left":"right"]=false;
+    });
+  });
+} else { mobileControls.style.display="none"; }
+
+// Colisión
+function collide(a,b){ return(a.x<b.x+b.width && a.x+a.width>b.x && a.y<b.y+b.height && a.y+a.height>b.y); }
+
+// Dificultad
+function updateDifficulty(){ foodSpeed=Math.min(foodSpeedBase+score*0.2,foodSpeedMax); spawnInterval=Math.max(spawnIntervalMin,spawnIntervalBase-score*15); }
+
+// Emojis fondo
+let emojis=[];
+const emojiList = ["💖","⭐"];
+function spawnEmoji(){ const size = 16 + Math.random()*16; emojis.push({x: Math.random()*window.innerWidth, y: window.innerHeight + size, size: size, char: emojiList[Math.floor(Math.random()*emojiList.length)], speed: 1 + Math.random()*2}); }
+function updateEmojis(){ if(Math.random()<0.05) spawnEmoji(); emojis.forEach(e=> e.y -= e.speed); emojis = emojis.filter(e => e.y + e.size > 0);}
+function drawEmojis(){ emojiBg.innerHTML = ""; emojis.forEach(e=>{ const span=document.createElement("span"); span.style.position="absolute"; span.style.left=e.x+"px"; span.style.top=e.y+"px"; span.style.fontSize=e.size+"px"; span.textContent=e.char; emojiBg.appendChild(span);});}
+
+// --- Bucle principal ---
+function gameLoop(t){
+  if(keysPressed.left && player.x>0) player.x-=player.speed;
+  if(keysPressed.right && player.x+player.width<gameCanvas.width) player.x+=player.speed;
+  updateDifficulty();
+  if(!lastSpawn) lastSpawn=t;
+  if(t-lastSpawn>spawnInterval && foods.length<maxFoods){
+    const type=Math.random()<0.2?{img:cherryImg,life:true}:{img:strawberryImg,life:false};
+    const size=40*(gameCanvas.width/700);
+    foods.push({x:Math.random()*(gameCanvas.width-size),y:-size,width:size,height:size,image:type.img,life:type.life});
+    lastSpawn=t;
+  }
+  foods.forEach(f=>f.y+=foodSpeed);
+  foods=foods.filter(f=>{
+    if(collide(player,f)){score++; if(f.life) misses=Math.max(0,misses-1); return false;}
+    if(f.y>gameCanvas.height){ misses++; return false;}
+    return true;
+  });
+  
+  // Condicional victoria
+  if(score>=55 && document.getElementById("winScreen").style.display==="none"){
+    gameCanvas.style.display="none";
+    mobileControls.style.display="none";
+    document.getElementById("winScreen").style.display="block";
+    return;
+  }
+
+  if(misses>=maxMisses){ alert("Game Over — Puntos: "+score); resetGame(); }
+
+  ctx.clearRect(0,0,gameCanvas.width,gameCanvas.height);
+  ctx.drawImage(backgroundImg,0,0,gameCanvas.width,gameCanvas.height);
+  ctx.drawImage(snoopyImg,player.x,player.y,player.width,player.height);
+  foods.forEach(f=>ctx.drawImage(f.image,f.x,f.y,f.width,f.height));
+
+  ctx.fillStyle="#6a0dad";
+  ctx.font=`${28*(gameCanvas.width/700)}px Comic Sans MS`;
+  ctx.textAlign="center";
+  ctx.fillText("Stray Kids de Temu",gameCanvas.width/2,35*(gameCanvas.width/700));
+
+  ctx.textAlign="left";
+  ctx.fillStyle="white";
+  ctx.font=`${20*(gameCanvas.width/700)}px Arial`;
+  ctx.fillText("Puntos: "+score,10,65*(gameCanvas.width/700));
+  ctx.fillText("Vidas: "+(maxMisses-misses),10,90*(gameCanvas.width/700));
+
+  updateEmojis();
+  drawEmojis();
+  requestAnimationFrame(gameLoop);
+}
+
+// --- Audio y inicio ---
+let audio = new Audio("aude.mp3");
+audio.loop = true;
+
+document.getElementById("btnStart").addEventListener("click", () => {
+  document.getElementById("intro").style.display = "none";
+  gameCanvas.style.display = "block";
+  mobileControls.style.display = isMobile() ? "flex" : "none";
+  resetGame();
+  gameStarted = true;
+  requestAnimationFrame(gameLoop);
+
+  // Audio seguro móviles
+  audio.play().catch(()=> {
+    document.body.addEventListener('touchstart', function handler() {
+      audio.play();
+      document.body.removeEventListener('touchstart', handler);
+    });
+  });
+});
+
+// Botón victoria
+document.getElementById("btnWinLink").addEventListener("click", () => {
+  window.location.href = "https://myselfish379.github.io/proyectstktk123.github.io/iss2/cartas/index.html"; // link vacío
+});
+
+// Redimension
+window.addEventListener("resize",()=>{ resizeGameCanvas(); if(gameStarted) resetGame(); });
+</script>
+</body>
+</html>
