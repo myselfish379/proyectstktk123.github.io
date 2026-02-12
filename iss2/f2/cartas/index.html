@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi corazon</title>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&display=swap');
+
+body{
+  font-family: 'Amatic SC', cursive;
+  margin:0; padding:0;
+  overflow-x:hidden;
+  color:#fff;
+}
+
+.bgoverlay{
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+.bgoverlay::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background-size:cover;
+  background-position:center;
+  opacity:0.9;
+  z-index:1;
+}
+
+/* Wallpaper PC */
+@media(min-width: 401px){
+  .bgoverlay::before { background-image: url('wallpaper_pc.jpg'); }
+}
+/* Wallpaper móvil */
+@media(max-width:400px){
+  .bgoverlay::before { background-image: url('wallpaper_movil.jpg'); }
+}
+
+.container, .ico, .endtext{
+  position: relative;
+  z-index:2;
+}
+
+/* TAMAÑO PARA PC - AJUSTADO */
+.container{ 
+  width:550px; 
+}
+
+.ico{
+  display:block;
+  width:550px;
+  height:550px;
+  position: relative;
+}
+
+/* Corazón negro con transparencia 0.5 */
+.ico:before,
+.ico:after,
+.ico2:before,
+.ico2:after {
+  color: rgba(0,0,0,0.5);
+  pointer-events: none;
+}
+
+/* EL CORAZÓN YA NO DESAPARECE - Solo se expande */
+.open .ico{
+  animation: open 4s forwards;
+}
+
+/* ÁREA DE CLICK MÁS GRANDE Y EN UNA SOLA LÍNEA */
+.ico .title{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-size:110px;
+  cursor:pointer;
+  text-shadow: 3px 5px 4px rgba(0,0,0,0.4);
+  z-index:10;
+  padding: 30px 50px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Efecto hover para indicar que es clickeable */
+.ico .title:hover{
+  transform:translate(-50%,-50%) scale(1.1);
+  text-shadow: 0 0 30px rgba(255,255,255,0.6), 3px 5px 4px rgba(0,0,0,0.4);
+  background: rgba(255,255,255,0.05);
+}
+
+/* El título desaparece suavemente al hacer click */
+.open .ico .title{
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.ico:before,
+.ico:after,
+.ico2:before,
+.ico2:after{
+  position:absolute;
+  top:0; left:0;
+  display:block;
+  font-size:35em;
+  content:"\f004";
+  font-family: FontAwesome;
+}
+
+.ico:before{ z-index:3; }
+
+/* Animación de corazón más natural */
+.ico:after { animation: explode 8s infinite ease-in-out; }
+.ico2:before { animation: explodeSmall 6s infinite ease-in-out; }
+.ico2:after { animation: explodeSmall 5s infinite ease-in-out; }
+
+.ico2{
+  pointer-events: none;
+}
+
+/* CONTENEDOR PRINCIPAL CON SCROLL */
+.endtext{
+  opacity:0;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  z-index:2;
+  pointer-events: none;
+  overflow-y: auto; /* SCROLL HABILITADO */
+  overflow-x: hidden;
+  padding: 100px 20px 50px 20px; /* Espacio arriba y abajo */
+}
+
+.open .endtext{
+  opacity:1;
+  pointer-events: auto;
+  animation:show 1s forwards;
+  animation-delay: 3.5s;
+}
+
+/* Contenedor interno para centrar contenido */
+.endtext-inner{
+  width: 100%;
+  max-width: 850px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.endtext h1{
+  text-align:center;
+  font-weight: normal;
+  font-size:100px;
+  margin-bottom:40px;
+  margin-top: 20px;
+  cursor:pointer;
+  transition: transform 0.3s ease;
+  padding: 20px;
+}
+
+.endtext h1:hover{
+  transform: scale(1.08);
+  text-shadow: 0 0 25px rgba(255,255,255,0.6);
+}
+
+/* Recuadro con imagen de fondo y overlay negro */
+.recuadro{
+  position: relative;
+  background-image: url('mariposa.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius:18px;
+  padding:50px;
+  width:100%;
+  max-width:750px;
+  text-align:center;
+  font-size:32px;
+  line-height:1.7;
+  margin-bottom:40px;
+  overflow: hidden;
+}
+
+/* Overlay semitransparente para oscurecer la imagen */
+.recuadro::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background-color: rgba(0,0,0,0.6);
+  border-radius:18px;
+  z-index:1;
+}
+
+/* Contenido sobre el overlay - TEXTO BLANCO PURO */
+.recuadro .texto-typewriter{
+  position: relative;
+  z-index:2;
+  color: #ffffff !important;
+  text-shadow: 2px 2px 3px rgba(0,0,0,0.9);
+}
+
+/* Cursor parpadeante del typewriter */
+.recuadro .texto-typewriter::after{
+  content: '|';
+  animation: blink 0.7s infinite;
+}
+
+.recuadro .texto-typewriter.typing-complete::after{
+  display: none;
+}
+
+/* NUEVO RECUADRO SUPERPUESTO */
+.recuadro-teamo{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background-image: url('teamo.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius:25px;
+  padding:60px;
+  width: 90%;
+  max-width: 850px;
+  max-height: 85vh;
+  overflow-y: auto; /* SCROLL HABILITADO */
+  text-align:center;
+  font-size:30px;
+  line-height:1.8;
+  z-index: 1000;
+  opacity: 0;
+  transition: all 0.5s ease;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+}
+
+.recuadro-teamo.active{
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+/* Overlay del nuevo recuadro */
+.recuadro-teamo::before{
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background-color: rgba(0,0,0,0.65);
+  border-radius:25px;
+  z-index:1;
+  animation: pulseBg 3s ease-in-out infinite;
+}
+
+/* Efecto de brillo bajo en el fondo */
+@keyframes pulseBg {
+  0%, 100% { 
+    background-color: rgba(0,0,0,0.65);
+    box-shadow: inset 0 0 40px rgba(255,255,255,0.05);
+  }
+  50% { 
+    background-color: rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 60px rgba(255,255,255,0.18);
+  }
+}
+
+/* Contenido del recuadro teamo */
+.recuadro-teamo .contenido-teamo{
+  position: relative;
+  z-index:2;
+  color: #ffffff !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+}
+
+.recuadro-teamo .contenido-teamo h2{
+  font-size: 75px;
+  margin-top: 0;
+  margin-bottom: 35px;
+}
+
+.recuadro-teamo .texto-typewriter-teamo{
+  color: #ffffff !important;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+  margin-bottom: 25px;
+}
+
+.recuadro-teamo .texto-typewriter-teamo::after{
+  content: '|';
+  animation: blink 0.7s infinite;
+}
+
+.recuadro-teamo .texto-typewriter-teamo.typing-complete::after{
+  display: none;
+}
+
+/* Botón cerrar del recuadro teamo */
+.recuadro-teamo .close-teamo{
+  position: sticky;
+  top: 15px;
+  float: right;
+  cursor: pointer;
+  font-size: 40px;
+  z-index: 3;
+  color: #fff;
+  transition: transform 0.3s ease;
+  padding: 10px;
+  margin-bottom: -50px;
+}
+
+.recuadro-teamo .close-teamo:hover{
+  transform: rotate(90deg) scale(1.4);
+  color: #ff6b6b;
+}
+
+.boton{
+  display:none;
+  margin:0 auto 30px auto;
+  padding:18px 45px;
+  background-color:#444;
+  color:#fff;
+  border-radius:12px;
+  text-decoration:none;
+  text-align:center;
+  font-size:28px;
+  cursor:pointer;
+  transition:0.3s;
+}
+.boton:hover{ 
+  background-color:#666;
+  transform: scale(1.08);
+}
+
+.open .boton{ display:block; }
+
+@keyframes explode {
+  0%, 100% { transform: scale(1); opacity:1; }
+  50% { transform: scale(1.6); opacity:0; }
+}
+@keyframes explodeSmall {
+  0%, 100% { transform: scale(1); opacity:1; }
+  50% { transform: scale(1.2); opacity:0; }
+}
+
+/* ANIMACIÓN DEL CORAZÓN - SIN DESAPARECER */
+@keyframes open{
+  from{transform:scale(1);}
+  to{transform:scale(10);}
+}
+
+@keyframes show{
+  from{
+    opacity:0;
+  }
+  to{
+    opacity:1;
+  }
+}
+
+@keyframes blink{
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.emoji{
+  position:fixed;
+  bottom:-30px;
+  font-size:42px;
+  z-index:9999;
+  animation:rise 5s linear forwards;
+  pointer-events:none;
+}
+@keyframes rise{from{transform:translateY(0) rotate(0deg);opacity:1;}to{transform:translateY(-150vh) rotate(360deg);opacity:0;}}
+
+/* Estilo de la barra de scroll */
+.endtext::-webkit-scrollbar,
+.recuadro-teamo::-webkit-scrollbar {
+  width: 10px;
+}
+
+.endtext::-webkit-scrollbar-track,
+.recuadro-teamo::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+}
+
+.endtext::-webkit-scrollbar-thumb,
+.recuadro-teamo::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
+  border-radius: 10px;
+}
+
+.endtext::-webkit-scrollbar-thumb:hover,
+.recuadro-teamo::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.5);
+}
+
+/* RESPONSIVE PARA MÓVIL */
+@media(max-width:400px){
+  .container{ width:90%; }
+  .ico{ width:320px; height:320px; }
+  .ico .title{ font-size:16vw; padding: 8vw 10vw; }
+  .ico:before, .ico:after, .ico2:before, .ico2:after{ font-size:20em; }
+  .endtext{ padding: 60px 10px 30px 10px; }
+  .endtext h1{ font-size:10vw; padding: 3vw; margin-top: 10px; }
+  .recuadro{ max-width:90%; font-size:4.5vw; padding:5vw; }
+  .boton{ font-size:5vw; padding:4vw 6vw; }
+  .recuadro-teamo{ font-size:4.5vw; padding:6vw; }
+  .recuadro-teamo .contenido-teamo h2{ font-size:8vw; }
+  .recuadro-teamo .close-teamo{ font-size:28px; top:10px; }
+  .emoji{ font-size:24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bgoverlay">
+  <div class="container">
+    <span class="ico">
+      <span class="ico2"></span>
+      <span class="title">Presióname</span>
+    </span>
+    <div class="endtext">
+      <div class="endtext-inner">
+        <h1 id="titulo-teamo">Mi dedicatoria</h1>
+        <div class="recuadro">
+          <p class="texto-typewriter" data-texto="hola, amor mio.. isabelita. ahora mismo estas escuchando a lana del rey en una live sesion cantar blue jeans. mi dedicatoria para ti... una historia de un amor, un amor de la vida que no se pierde, ella sabe que me quedas mejor que cualquier camiseta. el amor es cruel, duele, pero aun puedo reconocer que te amare el resto de mi vida, te podria esperar un millon de años. para asi demostrarte que eres mia, te amare cada vez mas, hasta el final de los tiempos. porque para mi solo un final asi puede separarnos, aunque la cancion habla sobre un amor que ya no esta, tu estaras acompañandome en cada momento. aunque no te lleve de la mano siempre estaras en mi. hasta el final de los tiempos, para que asi recuerdes que eres el amor de mi vida. y aunque la distancia nos separe eso no sera impedimento para amarte cada noche, cada dia. por cierto mi niña, deberias presionar el titulo de ´´mi dedicatoria´´"></p>
+        </div>
+        <a class="boton" href="https://myselfish379.github.io/proyectstktk123.github.io/iss2/f2/cartas/carta2/index.html" target="_blank">❤️</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NUEVO RECUADRO SUPERPUESTO -->
+<div class="recuadro-teamo">
+  <span class="close-teamo"><i class="fa fa-times"></i></span>
+  <div class="contenido-teamo">
+    <h2>❤️ Mensaje Especial ❤️</h2>
+    <p class="texto-typewriter-teamo" data-texto="todavia no e terminado mi carta, porque mis palabras para describirte no se han acabado, porque este amor es perpetuo... este dia es para recordar que entre tus ojos y los mios nacio la fe de lo que no podemos explicar, a un corazon que nunca aprendio a rezar.. le enseñaste a admirar de forma celestial lo que somos tu y yo. un regalo del universo.. porque no solo te amo a ti. es mas que eso lo que amo, lo que adoro. la existencia y el ser que me regalaste"></p>
+  </div>
+</div>
+
+<!-- AUDIO -->
+<audio id="miAudio"
+       src="audio.mp3"
+       preload="auto"
+       playsinline
+       webkit-playsinline
+       loop>
+</audio>
+
+<script>
+$(document).ready(function(){
+  
+  console.log("Script cargado correctamente");
+  
+  // Variable global para controlar el typewriter activo
+  let typewriterActivo = null;
+
+  function crearEmoji(){
+    const emojis=['🖤','🚬'];
+    const emoji=$('<div class="emoji"></div>');
+    emoji.text(emojis[Math.floor(Math.random()*emojis.length)]);
+    emoji.css('left', Math.random()*90+'vw');
+    $('body').append(emoji);
+    setTimeout(()=>{emoji.remove();},5000);
+  }
+
+  // Función typewriter MEJORADA - sin bugs
+  function typeWriter(elemento, texto, velocidad = 50) {
+    // Cancelar cualquier typewriter activo anterior
+    if (typewriterActivo) {
+      clearTimeout(typewriterActivo);
+      typewriterActivo = null;
+    }
+    
+    let i = 0;
+    elemento.text('').removeClass('typing-complete');
+    
+    function escribir() {
+      if (i < texto.length) {
+        elemento.text(elemento.text() + texto.charAt(i));
+        i++;
+        typewriterActivo = setTimeout(escribir, velocidad);
+      } else {
+        elemento.addClass('typing-complete');
+        typewriterActivo = null;
+      }
+    }
+    
+    escribir();
+  }
+
+  // EVENTO CLICK EN "PRESIÓNAME"
+  $('.title').on('click', function(e){
+    console.log("Click detectado en Presióname");
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Agregar clase para iniciar animación
+    $('.container').addClass('open');
+    
+    // Iniciar emojis
+    window.emojiInterval = setInterval(crearEmoji,300);
+
+    // Iniciar efecto typewriter después de la animación del corazón
+    setTimeout(function(){
+      const textoElemento = $('.texto-typewriter');
+      const textoCompleto = textoElemento.data('texto');
+      typeWriter(textoElemento, textoCompleto, 50);
+    }, 4500);
+
+    // Audio
+    const audio = document.getElementById('miAudio');
+    audio.pause();
+    audio.currentTime = 0;
+    audio.muted = false;
+    audio.volume = 0;
+    audio.load();
+    audio.loop = true;
+
+    let p = audio.play();
+    if (p !== undefined){ p.catch(()=>{}); }
+
+    let duration = 3000;
+    let steps = 30;
+    let increment = 0.5 / steps;
+    let stepTime = duration / steps;
+
+    let fadeInterval = setInterval(()=>{
+      if(audio.volume + increment < 0.5){
+        audio.volume += increment;
+      } else {
+        audio.volume = 0.5;
+        clearInterval(fadeInterval);
+      }
+    }, stepTime);
+  });
+
+  // CLICK EN EL TÍTULO "MI DEDICATORIA"
+  $('#titulo-teamo').click(function(){
+    console.log("Click detectado en Mi dedicatoria");
+    $('.recuadro-teamo').addClass('active');
+    
+    // Scroll al inicio del recuadro
+    $('.recuadro-teamo').scrollTop(0);
+    
+    // Iniciar typewriter del nuevo recuadro
+    setTimeout(function(){
+      const textoTeamo = $('.texto-typewriter-teamo');
+      const textoCompleto = textoTeamo.data('texto');
+      typeWriter(textoTeamo, textoCompleto, 40);
+    }, 500);
+  });
+
+  // CERRAR RECUADRO TEAMO
+  $('.close-teamo').click(function(){
+    console.log("Cerrando recuadro teamo");
+    $('.recuadro-teamo').removeClass('active');
+    
+    // Cancelar typewriter si está activo
+    if (typewriterActivo) {
+      clearTimeout(typewriterActivo);
+      typewriterActivo = null;
+    }
+    
+    // Limpiar el texto completamente
+    const textoTeamo = $('.texto-typewriter-teamo');
+    textoTeamo.text('').removeClass('typing-complete');
+  });
+
+});
+</script>
+
+</body>
+</html>
