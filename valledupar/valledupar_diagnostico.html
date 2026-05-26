@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cómo vives en Valledupar?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #1a6b4a;
+    --verde-claro: #2d9b6e;
+    --amarillo: #f5c842;
+    --rojo: #c0392b;
+    --crema: #fdf6ec;
+    --texto: #1a1a2e;
+    --gris: #6b7280;
+    --borde: #e5e0d8;
+    --stat-bg: #eaf7f1;
+    --stat-text: #1a6b4a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--crema);
+    color: var(--texto);
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--verde);
+    color: white;
+    padding: 80px 24px 60px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(245,200,66,0.12);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: var(--amarillo);
+    color: var(--verde);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 span { color: var(--amarillo); }
+
+  .hero p {
+    font-size: 1.05rem;
+    font-weight: 300;
+    max-width: 560px;
+    margin: 0 auto 36px;
+    opacity: 0.88;
+    line-height: 1.7;
+  }
+
+  .stat-hero {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 14px 22px;
+    font-size: 0.95rem;
+  }
+
+  .stat-hero strong { color: var(--amarillo); font-size: 1.4rem; font-family: 'Playfair Display', serif; }
+
+  .scroll-hint {
+    margin-top: 40px;
+    opacity: 0.6;
+    font-size: 0.85rem;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* FORMULARIO */
+  .form-section {
+    padding: 60px 0;
+  }
+
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .form-subtitle {
+    color: var(--gris);
+    margin-bottom: 40px;
+    font-size: 0.95rem;
+  }
+
+  .pregunta-bloque {
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: box-shadow 0.2s;
+  }
+
+  .pregunta-bloque:focus-within {
+    box-shadow: 0 4px 20px rgba(26,107,74,0.12);
+    border-color: var(--verde-claro);
+  }
+
+  .pregunta-label {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .pregunta-num {
+    background: var(--verde);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .opciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .opcion {
+    border: 1.5px solid var(--borde);
+    background: white;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texto);
+  }
+
+  .opcion:hover { border-color: var(--verde-claro); background: #f0faf5; }
+
+  .opcion.seleccionada {
+    background: var(--verde);
+    border-color: var(--verde);
+    color: white;
+  }
+
+  /* ESTADÍSTICA REACTIVA */
+  .stat-reactiva {
+    margin-top: 16px;
+    background: var(--stat-bg);
+    border-left: 3px solid var(--verde-claro);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    color: var(--stat-text);
+    display: none;
+    animation: fadeIn 0.35s ease;
+  }
+
+  .stat-reactiva.visible { display: block; }
+
+  .stat-reactiva strong { font-weight: 500; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* INPUT INGRESO */
+  .input-ingreso {
+    width: 100%;
+    border: 1.5px solid var(--borde);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texto);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .input-ingreso:focus { border-color: var(--verde-claro); }
+
+  /* BOTÓN */
+  .btn-diagnostico {
+    width: 100%;
+    background: var(--verde);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 18px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 10px;
+  }
+
+  .btn-diagnostico:hover { background: var(--verde-claro); }
+  .btn-diagnostico:active { transform: scale(0.99); }
+  .btn-diagnostico:disabled { background: #aaa; cursor: not-allowed; }
+
+  /* RESULTADO */
+  #resultado {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .resultado-card {
+    background: white;
+    border-radius: 20px;
+    border: 1px solid var(--borde);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .resultado-header {
+    padding: 28px 28px 20px;
+    border-bottom: 1px solid var(--borde);
+  }
+
+  .perfil-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+
+  .perfil-estable .perfil-badge { background: #e8f5e9; color: #2e7d32; }
+  .perfil-medio .perfil-badge { background: #fff8e1; color: #f57f17; }
+  .perfil-vulnerable .perfil-badge { background: #fce4ec; color: #c62828; }
+
+  .resultado-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .resultado-header p {
+    color: var(--gris);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .resultado-body { padding: 24px 28px; }
+
+  .recomendaciones h3 {
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gris);
+    margin-bottom: 14px;
+  }
+
+  .recomendacion-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .recomendacion-item::before {
+    content: '→';
+    color: var(--verde-claro);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ENVÍO AUTOMÁTICO */
+  .envio-card {
+    background: #eaf7f1;
+    border: 1.5px solid var(--verde-claro);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+
+  .envio-card .check-icon {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+
+  .envio-card h3 {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: var(--verde);
+  }
+
+  .envio-card p {
+    font-size: 0.88rem;
+    color: #2d5a47;
+    line-height: 1.6;
+  }
+
+  .radicado {
+    display: inline-block;
+    background: var(--verde);
+    color: white;
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-family: monospace;
+    letter-spacing: 1px;
+  }
+
+  .ley-nota {
+    font-size: 0.78rem;
+    color: var(--gris);
+    margin-top: 8px;
+  }
+
+  /* MENSAJE ADICIONAL */
+  .adicional-card {
+    background: white;
+    border: 1px solid var(--borde);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+
+  .adicional-card h3 {
+    font-weight: 500;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+
+  .adicional-card .hint {
+    font-size: 0.85rem;
+    color: var(--gris);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+
+  .textarea-adicional {
+    width: 100%;
+    border: 1.5px solid var(--borde);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--texto);
+    resize: vertical;
+    min-height: 100px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .textarea-adicional:focus { border-color: var(--verde-claro); }
+
+  .btn-adicional {
+    margin-top: 12px;
+    background: transparent;
+    border: 1.5px solid var(--verde);
+    color: var(--verde);
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .btn-adicional:hover { background: var(--verde); color: white; }
+
+  .confirmacion-adicional {
+    display: none;
+    margin-top: 12px;
+    font-size: 0.88rem;
+    color: var(--verde);
+    font-weight: 500;
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--verde);
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    padding: 28px 24px;
+    font-size: 0.82rem;
+  }
+
+  footer strong { color: white; }
+
+  /* PROGRESO */
+  .progreso-barra {
+    height: 4px;
+    background: var(--borde);
+    border-radius: 2px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+
+  .progreso-fill {
+    height: 100%;
+    background: var(--verde-claro);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.4s ease;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Diagnóstico ciudadano · Valledupar</div>
+  <h1>¿Cómo vives<br>en <span>Valledupar</span>?</h1>
+  <p>Responde 6 preguntas sobre tu situación real. Te mostraremos cómo se compara con la realidad de miles de familias en el Cesar y qué puedes hacer al respecto.</p>
+  <div class="stat-hero">
+    <strong>42%</strong>
+    <span>de vallenatos vive en condición de pobreza moderada</span>
+  </div>
+  <div class="scroll-hint">↓ Comienza el diagnóstico</div>
+</div>
+
+<!-- FORMULARIO -->
+<div class="form-section">
+  <div class="container">
+    <h2 class="form-title">Tu diagnóstico</h2>
+    <p class="form-subtitle">Selecciona la opción que mejor describe tu situación actual.</p>
+
+    <div class="progreso-barra"><div class="progreso-fill" id="progreso"></div></div>
+
+    <!-- P1 -->
+    <div class="pregunta-bloque">
+      <div class="pregunta-label">
+        <span class="pregunta-num">1</span>
+        ¿En qué zona de Valledupar vives?
+      </div>
+      <div class="opciones" data-grupo="zona">
+        <button class="opcion" data-val="norte">Norte</button>
+        <button class="opcion" data-val="sur">Sur</button>
+        <button class="opcion" data-val="centro">Centro</button>
+        <button class="opcion" data-val="rural">Zona rural</button>
+        <button class="opcion" data-val="periferia">Barrio periférico</button>
+      </div>
+      <div class="stat-reactiva" id="stat-zona"></div>
+    </div>
+
+    <!-- P2 -->
+    <div class="pregunta-bloque">
+      <div class="pregunta-label">
+        <span class="pregunta-num">2</span>
+        ¿Cuánto gana tu hogar al mes aproximadamente?
+      </div>
+      <input type="number" class="input-ingreso" id="ingreso" placeholder="Ej: 1200000" min="0">
+      <div class="stat-reactiva" id="stat-ingreso"></div>
+    </div>
+
+    <!-- P3 -->
+    <div class="pregunta-bloque">
+      <div class="pregunta-label">
+        <span class="pregunta-num">3</span>
+        ¿Tienes agua potable continua en tu casa?
+      </div>
+      <div class="opciones" data-grupo="agua">
+        <button class="opcion" data-val="si">Sí, siempre</button>
+        <button class="opcion" data-val="intermitente">A veces / intermitente</button>
+        <button class="opcion" data-val="no">No tengo acceso</button>
+      </div>
+      <div class="stat-reactiva" id="stat-agua"></div>
+    </div>
+
+    <!-- P4 -->
+    <div class="pregunta-bloque">
+      <div class="pregunta-label">
+        <span class="pregunta-num">4</span>
+        ¿Cuál es tu nivel educativo?
+      </div>
+      <div class="opciones" data-grupo="educacion">
+        <button class="opcion" data-val="primaria">Primaria</button>
+        <button class="opcion" data-val="bachillerato">Bachillerato</button>
+        <button class="opcion" data-val="tecnico">Técnico / tecnólogo</button>
+        <button class="opcion" data-val="universidad">Universidad</button>
+        <button class="opcion" data-val="ninguno">Sin estudios</button>
+      </div>
+      <div class="stat-reactiva" id="stat-educacion"></div>
+    </div>
+
+    <!-- P5 -->
+    <div class="pregunta-bloque">
+      <div class="pregunta-label">
+        <span class="pregunta-num">5</span>
+        ¿Cómo es tu situación laboral?
+      </div>
+      <div class="opciones" data-grupo="trabajo">
+        <button class="opcion" data-val="formal">Empleo formal</button>
+        <button class="opcion" data-val="informal">Trabajo informal</button>
+        <button class="opcion" data-val="desempleo">Desempleado/a</button>
+        <button class="opcion" data-val="independiente">Independiente</button>
+      </div>
+      <div class="stat-reactiva" id="stat-trabajo"></div>
+    </div>
+
+    <!-- P6 -->
+    <div class="pregunta-bloque">
+      <div class="pregunta-label">
+        <span class="pregunta-num">6</span>
+        ¿Cómo accedes al servicio de salud?
+      </div>
+      <div class="opciones" data-grupo="salud">
+        <button class="opcion" data-val="eps">EPS (contributivo)</button>
+        <button class="opcion" data-val="sisben">SISBEN</button>
+        <button class="opcion" data-val="ninguna">Sin afiliación</button>
+      </div>
+      <div class="stat-reactiva" id="stat-salud"></div>
+    </div>
+
+    <button class="btn-diagnostico" id="btn-diagnostico" disabled onclick="mostrarResultado()">
+      Ver mi diagnóstico →
+    </button>
+  </div>
+</div>
+
+<!-- RESULTADO -->
+<div id="resultado">
+  <div style="background: #f7f3ee; padding: 60px 0;">
+    <div class="container">
+
+      <div class="resultado-card" id="resultado-card">
+        <div class="resultado-header" id="resultado-header"></div>
+        <div class="resultado-body" id="resultado-body"></div>
+      </div>
+
+      <!-- ENVÍO AUTOMÁTICO -->
+      <div class="envio-card" id="envio-card"></div>
+
+      <!-- MENSAJE ADICIONAL -->
+      <div class="adicional-card">
+        <h3>¿Quieres añadir algo adicional a tu reporte?</h3>
+        <p class="hint" id="hint-adicional"></p>
+        <textarea class="textarea-adicional" id="texto-adicional" placeholder="Escribe aquí..."></textarea>
+        <br>
+        <button class="btn-adicional" onclick="enviarAdicional()">Adjuntar al reporte</button>
+        <div class="confirmacion-adicional" id="confirmacion-adicional"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>Diagnóstico Ciudadano Valledupar</strong> · Herramienta de sensibilización social · Los datos son referenciales basados en informes del DANE y la Alcaldía de Valledupar.
+</footer>
+
+<script>
+  const respuestas = { zona: null, ingreso: null, agua: null, educacion: null, trabajo: null, salud: null };
+  let radicadoGenerado = '';
+
+  // Estadísticas reactivas
+  const stats = {
+    zona: {
+      norte: '📊 El norte de Valledupar concentra mayor acceso a servicios públicos y empleo formal.',
+      sur: '📊 El 60% de la pobreza en Valledupar se concentra en el sur y zonas rurales del municipio.',
+      centro: '📊 El centro histórico tiene mayor cobertura de servicios, pero alta informalidad comercial.',
+      rural: '📊 En zonas rurales del Cesar, el 77% de la pobreza extrema tiene acceso limitado a servicios básicos.',
+      periferia: '📊 Los barrios periféricos de Valledupar tienen un 38% menos de cobertura en servicios básicos que el centro.'
+    },
+    agua: {
+      si: '📊 Solo el 62% de hogares en Valledupar tiene acceso continuo y garantizado al agua potable.',
+      intermitente: '📊 El 38% de barrios periféricos reporta acceso intermitente al agua, especialmente en época seca.',
+      no: '📊 Aproximadamente 18.000 familias en el Cesar no tienen acceso regular a agua potable en sus hogares.'
+    },
+    educacion: {
+      primaria: '📊 La tasa de deserción escolar en el Cesar es del 8.4%, una de las más altas del país.',
+      bachillerato: '📊 Solo el 47% de adultos en zonas rurales del Cesar completó el bachillerato.',
+      tecnico: '📊 La formación técnica reduce el riesgo de informalidad laboral en un 34% según el SENA.',
+      universidad: '📊 Solo el 18% de jóvenes del Cesar accede a educación universitaria.',
+      ninguno: '📊 El 12% de adultos mayores de 25 años en el Cesar no completó ningún nivel educativo formal.'
+    },
+    trabajo: {
+      formal: '📊 Solo el 37% de la población ocupada en Valledupar tiene empleo formal con todas las prestaciones.',
+      informal: '📊 El 63% de la población ocupada en Valledupar trabaja en la informalidad sin seguridad social.',
+      desempleo: '📊 La tasa de desempleo en Valledupar fue del 14.2% en 2023, por encima del promedio nacional.',
+      independiente: '📊 El 41% de independientes en el Cesar no cotiza a pensión ni seguridad social.'
+    },
+    salud: {
+      eps: '📊 El 42% de afiliados a EPS en Valledupar reporta dificultades para acceder a citas especializadas.',
+      sisben: '📊 El 58% de vallenatos depende del SISBEN para atención médica básica.',
+      ninguna: '📊 Aproximadamente 4 millones de colombianos no tienen ningún tipo de afiliación al sistema de salud.'
+    }
+  };
+
+  // Opciones clicables
+  document.querySelectorAll('.opciones').forEach(grupo => {
+    grupo.querySelectorAll('.opcion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        grupo.querySelectorAll('.opcion').forEach(b => b.classList.remove('seleccionada'));
+        btn.classList.add('seleccionada');
+        const nombreGrupo = grupo.dataset.grupo;
+        respuestas[nombreGrupo] = btn.dataset.val;
+        const statEl = document.getElementById('stat-' + nombreGrupo);
+        statEl.textContent = stats[nombreGrupo][btn.dataset.val] || '';
+        statEl.classList.add('visible');
+        actualizarProgreso();
+      });
+    });
+  });
+
+  // Ingreso
+  document.getElementById('ingreso').addEventListener('input', function() {
+    const val = parseInt(this.value);
+    respuestas.ingreso = val;
+    const statEl = document.getElementById('stat-ingreso');
+    if (!isNaN(val) && val > 0) {
+      let porcentaje, mensaje;
+      if (val < 500000) { porcentaje = 18; mensaje = 'por debajo del 82% de hogares en Valledupar'; }
+      else if (val < 1000000) { porcentaje = 35; mensaje = 'en el 35% de hogares con menores ingresos del municipio'; }
+      else if (val < 1500000) { porcentaje = 55; mensaje = 'cerca del ingreso promedio en Valledupar ($1.2M mensual)'; }
+      else if (val < 3000000) { porcentaje = 75; mensaje = 'por encima del 75% de los hogares vallenatos'; }
+      else { porcentaje = 90; mensaje = 'en el 10% de hogares de mayores ingresos de la ciudad'; }
+      statEl.textContent = `📊 Con este ingreso estás ${mensaje}. El salario mínimo en Colombia es $1.300.000 (2024).`;
+      statEl.classList.add('visible');
+    } else {
+      statEl.classList.remove('visible');
+    }
+    actualizarProgreso();
+  });
+
+  function actualizarProgreso() {
+    const total = Object.values(respuestas).filter(v => v !== null && v !== '').length;
+    document.getElementById('progreso').style.width = (total / 6 * 100) + '%';
+    const completo = respuestas.zona && respuestas.ingreso && respuestas.agua &&
+      respuestas.educacion && respuestas.trabajo && respuestas.salud;
+    document.getElementById('btn-diagnostico').disabled = !completo;
+  }
+
+  function calcularPerfil() {
+    let puntos = 0;
+    if (['sur', 'rural', 'periferia'].includes(respuestas.zona)) puntos += 2;
+    if (respuestas.ingreso < 1000000) puntos += 2;
+    else if (respuestas.ingreso < 1800000) puntos += 1;
+    if (respuestas.agua === 'no') puntos += 2;
+    else if (respuestas.agua === 'intermitente') puntos += 1;
+    if (['ninguno', 'primaria'].includes(respuestas.educacion)) puntos += 2;
+    if (respuestas.trabajo === 'desempleo') puntos += 2;
+    else if (respuestas.trabajo === 'informal') puntos += 1;
+    if (respuestas.salud === 'ninguna') puntos += 2;
+    else if (respuestas.salud === 'sisben') puntos += 1;
+    if (puntos >= 7) return 'vulnerable';
+    if (puntos >= 3) return 'medio';
+    return 'estable';
+  }
+
+  function determinarOrganismo() {
+    if (respuestas.salud === 'ninguna') return { nombre: 'Secretaría de Salud del Cesar', asunto: 'población sin cobertura médica adecuada' };
+    if (respuestas.trabajo === 'desempleo' || respuestas.trabajo === 'informal') return { nombre: 'SENA Regional Cesar', asunto: 'necesidad de formación y acceso a empleo formal' };
+    if (respuestas.agua === 'no' || respuestas.agua === 'intermitente') return { nombre: 'Alcaldía de Valledupar — Secretaría de Planeación', asunto: 'condiciones de infraestructura deficiente' };
+    if (['ninguno', 'primaria'].includes(respuestas.educacion)) return { nombre: 'Secretaría de Educación del Cesar', asunto: 'acceso limitado a educación' };
+    return { nombre: 'Alcaldía de Valledupar', asunto: 'reporte de percepción ciudadana sobre desigualdad' };
+  }
+
+  function generarRadicado() {
+    const num = Math.floor(10000 + Math.random() * 89999);
+    return 'VP-2025-' + num;
+  }
+
+  const perfiles = {
+    estable: {
+      badge: '✦ Perfil estable',
+      titulo: 'Tu situación está por encima del promedio',
+      mensaje: 'Tus condiciones básicas están cubiertas, pero vivir en una ciudad desigual te afecta aunque no lo notes directamente: inseguridad, infraestructura deficiente y falta de oportunidades para otros son problemas colectivos que impactan la calidad de vida de todos.',
+      recomendaciones: [
+        'Participa en juntas de acción comunal de tu barrio o localidad.',
+        'Exige rendición de cuentas públicas a la alcaldía local.',
+        'Apoya iniciativas de empleo en zonas vulnerables de la ciudad.',
+        'Infórmate sobre el presupuesto participativo del municipio.'
+      ]
+    },
+    medio: {
+      badge: '◈ Perfil medio-vulnerable',
+      titulo: 'Estás donde está la mayoría de vallenatos',
+      mensaje: 'Tu situación es la de la franja media de Valledupar — en el límite. Un cambio en el empleo, la salud o la economía puede hacerlo crítico. Hay programas disponibles que pueden fortalecer tu estabilidad.',
+      recomendaciones: [
+        'Consulta si calificas para Jóvenes en Acción o Colombia Mayor.',
+        'El SENA Regional Cesar ofrece cursos gratuitos y bolsa de empleo.',
+        'Verifica tu elegibilidad para subsidios de vivienda con Mi Casa Ya.',
+        'Revisa si tienes derechos pensionales no reclamados en Colpensiones.'
+      ]
+    },
+    vulnerable: {
+      badge: '⚠ Perfil en vulnerabilidad',
+      titulo: 'Tu situación es la de miles de familias',
+      mensaje: 'Lo que vives no es una falla personal — es el resultado de décadas de desigualdad estructural en el Cesar. Existen rutas de atención reales en la ciudad a las que tienes derecho.',
+      recomendaciones: [
+        'Si no estás en el SISBEN, dirígete a la Alcaldía de Valledupar para la encuesta de clasificación.',
+        'Familias en Acción ofrece subsidios directos para hogares con niños en edad escolar.',
+        'Si hay desplazamiento en tu historia familiar, la Unidad para las Víctimas tiene derecho a reparación.',
+        'El ICBF Valledupar atiende prioritariamente menores y madres cabeza de hogar.'
+      ]
+    }
+  };
+
+  const hintsAdicionales = {
+    salud: 'Por ejemplo: si tienes alguna condición médica sin atender, si hay menores o adultos mayores en tu hogar sin afiliación, o si ya intentaste afiliarte y tuviste problemas.',
+    trabajo: 'Por ejemplo: en qué área te gustaría capacitarte, cuánto tiempo llevas sin empleo formal, o si tienes personas a cargo.',
+    agua: 'Por ejemplo: el nombre de tu barrio, hace cuánto tiempo llevas sin agua continua, o si hay más familias en tu sector afectadas.',
+    educacion: 'Por ejemplo: la razón por la que dejaste de estudiar, si hay niños en tu hogar fuera del colegio, o si vives lejos de una institución educativa.',
+    default: 'Por ejemplo: problemáticas que observas en tu barrio, sugerencias para la ciudad, o cualquier detalle que consideres importante para tu reporte.'
+  };
+
+  function mostrarResultado() {
+    const perfil = calcularPerfil();
+    const organismo = determinarOrganismo();
+    radicadoGenerado = generarRadicado();
+    const data = perfiles[perfil];
+
+    // Header resultado
+    const header = document.getElementById('resultado-header');
+    header.innerHTML = `
+      <div class="perfil-${perfil}">
+        <span class="perfil-badge">${data.badge}</span>
+        <h2>${data.titulo}</h2>
+        <p>${data.mensaje}</p>
+      </div>
+    `;
+
+    // Body resultado
+    const body = document.getElementById('resultado-body');
+    body.innerHTML = `
+      <div class="recomendaciones">
+        <h3>Rutas de apoyo recomendadas</h3>
+        ${data.recomendaciones.map(r => `<div class="recomendacion-item">${r}</div>`).join('')}
+      </div>
+    `;
+
+    // Envío automático
+    const envio = document.getElementById('envio-card');
+    envio.innerHTML = `
+      <div class="check-icon">✅</div>
+      <h3>Tu diagnóstico fue enviado automáticamente</h3>
+      <p>Tu reporte fue enviado a la <strong>${organismo.nombre}</strong> como alerta de <strong>${organismo.asunto}</strong> en Valledupar.</p>
+      <span class="radicado">${radicadoGenerado}</span>
+      <p class="ley-nota">Los organismos tienen 15 días hábiles para gestionar según la Ley 1755 de 2015 — Derecho de Petición.</p>
+    `;
+
+    // Hint adicional
+    let hintKey = 'default';
+    if (respuestas.salud === 'ninguna') hintKey = 'salud';
+    else if (respuestas.trabajo === 'desempleo' || respuestas.trabajo === 'informal') hintKey = 'trabajo';
+    else if (respuestas.agua !== 'si') hintKey = 'agua';
+    else if (['ninguno', 'primaria'].includes(respuestas.educacion)) hintKey = 'educacion';
+    document.getElementById('hint-adicional').textContent = hintsAdicionales[hintKey];
+
+    // Mostrar resultado
+    document.getElementById('resultado').style.display = 'block';
+    document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function enviarAdicional() {
+    const texto = document.getElementById('texto-adicional').value.trim();
+    if (!texto) return;
+    const conf = document.getElementById('confirmacion-adicional');
+    conf.textContent = `✅ Tu mensaje adicional fue adjuntado al radicado ${radicadoGenerado}.`;
+    conf.style.display = 'block';
+    document.getElementById('texto-adicional').disabled = true;
+    document.querySelector('.btn-adicional').disabled = true;
+  }
+</script>
+</body>
+</html>
