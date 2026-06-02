@@ -465,6 +465,158 @@
     width: 0%;
     transition: width 0.4s ease;
   }
+
+  /* SHARE / COPY LINK */
+  .share-section {
+    background: var(--verde);
+    padding: 40px 24px;
+    text-align: center;
+  }
+  .share-section h3 {
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+  }
+  .share-section p {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  .btn-share {
+    background: var(--amarillo);
+    color: var(--verde);
+    border: none;
+    border-radius: 10px;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    margin: 0 8px;
+  }
+  .btn-share:hover { opacity: 0.88; }
+  .copy-confirm {
+    display: none;
+    color: var(--amarillo);
+    font-size: 0.9rem;
+    margin-top: 12px;
+    animation: fadeIn 0.3s ease;
+  }
+
+  /* COUNTER ANIMATION */
+  .stat-hero strong {
+    display: inline-block;
+    min-width: 3ch;
+  }
+  
+  /* STICKY PROGRESS */
+  .sticky-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    border-bottom: 1px solid var(--borde);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: var(--gris);
+  }
+  .sticky-bar .progreso-barra {
+    flex: 1;
+    margin: 0;
+  }
+  .sticky-count {
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--verde);
+  }
+
+  /* IDENTIFICACIÓN */
+  .id-card {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 16px;
+    padding: 20px 24px;
+    max-width: 560px;
+    margin: 28px auto 0;
+    text-align: left;
+  }
+  .id-card-title {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .id-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .id-field {
+    flex: 1;
+    min-width: 140px;
+  }
+  .id-field label {
+    display: block;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.78rem;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+  .id-input {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: white;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .id-input::placeholder { color: rgba(255,255,255,0.35); }
+  .id-input:focus { border-color: var(--amarillo); }
+  .id-select {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    color: white;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.5)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  .id-select option { background: #1a6b4a; color: white; }
+  .id-select:focus { border-color: var(--amarillo); }
+  .id-doc-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .id-doc-row .id-field:first-child { flex: 0 0 160px; }
+  .id-doc-row .id-field:last-child { flex: 1; }
+  .id-optional {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+    margin-top: 10px;
+    text-align: center;
+  }
 </style>
 </head>
 <body>
@@ -479,10 +631,42 @@
     <span>de vallenatos vive en condición de pobreza moderada</span>
   </div>
   <div class="scroll-hint">↓ Comienza el diagnóstico</div>
+  <div class="id-card">
+    <div class="id-card-title">📋 Datos de identificación</div>
+    <div class="id-row">
+      <div class="id-field">
+        <label for="id-nombre">Nombre completo</label>
+        <input type="text" class="id-input" id="id-nombre" placeholder="Tu nombre">
+      </div>
+    </div>
+    <div class="id-doc-row">
+      <div class="id-field">
+        <label for="id-tipo">Tipo de documento</label>
+        <select class="id-select" id="id-tipo">
+          <option value="cc">Cédula de ciudadanía (CC)</option>
+          <option value="ti">Tarjeta de identidad (TI)</option>
+          <option value="ce">Cédula de extranjería (CE)</option>
+          <option value="pasaporte">Pasaporte</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+      <div class="id-field">
+        <label for="id-numero">Número de documento</label>
+        <input type="text" class="id-input" id="id-numero" placeholder="Ej: 1065432187" inputmode="numeric">
+      </div>
+    </div>
+    <p class="id-optional">Opcional — se incluirá en tu reporte ciudadano si lo completas</p>
+  </div>
 </div>
 
 <!-- FORMULARIO -->
 <div class="form-section">
+    <div class="sticky-bar">
+      <span>Progreso</span>
+      <div class="progreso-barra"><div class="progreso-fill" id="progreso2"></div></div>
+      <span class="sticky-count" id="sticky-count">0 / 6</span>
+    </div>
+
   <div class="container">
     <h2 class="form-title">Tu diagnóstico</h2>
     <p class="form-subtitle">Selecciona la opción que mejor describe tu situación actual.</p>
@@ -511,7 +695,13 @@
         <span class="pregunta-num">2</span>
         ¿Cuánto gana tu hogar al mes aproximadamente?
       </div>
-      <input type="number" class="input-ingreso" id="ingreso" placeholder="Ej: 1200000" min="0">
+      <div class="opciones" data-grupo="ingreso">
+        <button class="opcion" data-val="menos500">Menos de $500.000</button>
+        <button class="opcion" data-val="500a1m">$500.000 – $1.000.000</button>
+        <button class="opcion" data-val="1ma1500">$1.000.000 – $1.500.000</button>
+        <button class="opcion" data-val="1500a3m">$1.500.000 – $3.000.000</button>
+        <button class="opcion" data-val="mas3m">Más de $3.000.000</button>
+      </div>
       <div class="stat-reactiva" id="stat-ingreso"></div>
     </div>
 
@@ -607,6 +797,14 @@
   </div>
 </div>
 
+
+<!-- SHARE -->
+<div class="share-section" id="share-section" style="display:none">
+  <h3>¿Conoces a alguien que debería hacer este diagnóstico?</h3>
+  <p>Comparte este enlace — cada diagnóstico enviado es una señal más a las instituciones.</p>
+  <button class="btn-share" onclick="copiarLink()">📋 Copiar enlace</button>
+  <div class="copy-confirm" id="copy-confirm">✅ ¡Enlace copiado al portapapeles!</div>
+</div>
 <footer>
   <strong>Diagnóstico Ciudadano Valledupar</strong> · Herramienta de sensibilización social · Los datos son referenciales basados en informes del DANE y la Alcaldía de Valledupar.
 </footer>
@@ -624,7 +822,14 @@
       rural: '📊 En zonas rurales del Cesar, el 77% de la pobreza extrema tiene acceso limitado a servicios básicos.',
       periferia: '📊 Los barrios periféricos de Valledupar tienen un 38% menos de cobertura en servicios básicos que el centro.'
     },
-    agua: {
+    ingreso: {
+      menos500: '📊 Con menos de $500.000 estás por debajo del 82% de hogares en Valledupar. La línea de pobreza extrema está en $145.004 por persona al mes (DANE 2023).',
+      '500a1m': '📊 Con este ingreso estás en el 35% de hogares con menores ingresos del municipio. El ingreso promedio en Valledupar es de $1.2M mensual.',
+      '1ma1500': '📊 Estás cerca del ingreso promedio en Valledupar ($1.2M mensual). El salario mínimo colombiano en 2024 es $1.300.000.',
+      '1500a3m': '📊 Con este ingreso estás por encima del 75% de los hogares vallenatos. Aun así, el costo de vida en Valledupar sube ~6% anual.',
+      mas3m: '📊 Estás en el 10% de hogares de mayores ingresos de la ciudad. Solo el 37% de la población ocupada en Valledupar tiene empleo formal con todas las prestaciones.'
+    },
+        agua: {
       si: '📊 Solo el 62% de hogares en Valledupar tiene acceso continuo y garantizado al agua potable.',
       intermitente: '📊 El 38% de barrios periféricos reporta acceso intermitente al agua, especialmente en época seca.',
       no: '📊 Aproximadamente 18.000 familias en el Cesar no tienen acceso regular a agua potable en sus hogares.'
@@ -665,39 +870,15 @@
     });
   });
 
-  // Ingreso
-  document.getElementById('ingreso').addEventListener('input', function() {
-    const val = parseInt(this.value);
-    respuestas.ingreso = val;
-    const statEl = document.getElementById('stat-ingreso');
-    if (!isNaN(val) && val > 0) {
-      let porcentaje, mensaje;
-      if (val < 500000) { porcentaje = 18; mensaje = 'por debajo del 82% de hogares en Valledupar'; }
-      else if (val < 1000000) { porcentaje = 35; mensaje = 'en el 35% de hogares con menores ingresos del municipio'; }
-      else if (val < 1500000) { porcentaje = 55; mensaje = 'cerca del ingreso promedio en Valledupar ($1.2M mensual)'; }
-      else if (val < 3000000) { porcentaje = 75; mensaje = 'por encima del 75% de los hogares vallenatos'; }
-      else { porcentaje = 90; mensaje = 'en el 10% de hogares de mayores ingresos de la ciudad'; }
-      statEl.textContent = `📊 Con este ingreso estás ${mensaje}. El salario mínimo en Colombia es $1.300.000 (2024).`;
-      statEl.classList.add('visible');
-    } else {
-      statEl.classList.remove('visible');
-    }
-    actualizarProgreso();
-  });
+  // Ingreso ahora manejado por .opciones data-grupo='ingreso'
 
-  function actualizarProgreso() {
-    const total = Object.values(respuestas).filter(v => v !== null && v !== '').length;
-    document.getElementById('progreso').style.width = (total / 6 * 100) + '%';
-    const completo = respuestas.zona && respuestas.ingreso && respuestas.agua &&
-      respuestas.educacion && respuestas.trabajo && respuestas.salud;
-    document.getElementById('btn-diagnostico').disabled = !completo;
-  }
+  
 
   function calcularPerfil() {
     let puntos = 0;
     if (['sur', 'rural', 'periferia'].includes(respuestas.zona)) puntos += 2;
-    if (respuestas.ingreso < 1000000) puntos += 2;
-    else if (respuestas.ingreso < 1800000) puntos += 1;
+    if (['menos500','500a1m'].includes(respuestas.ingreso)) puntos += 2;
+    else if (respuestas.ingreso === '1ma1500') puntos += 1;
     if (respuestas.agua === 'no') puntos += 2;
     else if (respuestas.agua === 'intermitente') puntos += 1;
     if (['ninguno', 'primaria'].includes(respuestas.educacion)) puntos += 2;
@@ -794,11 +975,17 @@
 
     // Envío automático
     const envio = document.getElementById('envio-card');
+    const idNombre = document.getElementById('id-nombre').value.trim();
+    const idTipo = document.getElementById('id-tipo');
+    const idTipoLabel = idTipo.options[idTipo.selectedIndex].text;
+    const idNumero = document.getElementById('id-numero').value.trim();
+    const idLine = idNombre ? `<p style="font-size:0.85rem;color:#6b7280;margin-top:8px;">Reportado por: <strong>${idNombre}</strong>${idNumero ? ` · ${idTipoLabel}: ${idNumero}` : ''}</p>` : '';
     envio.innerHTML = `
       <div class="check-icon">✅</div>
       <h3>Tu diagnóstico fue enviado automáticamente</h3>
       <p>Tu reporte fue enviado a la <strong>${organismo.nombre}</strong> como alerta de <strong>${organismo.asunto}</strong> en Valledupar.</p>
       <span class="radicado">${radicadoGenerado}</span>
+      ${idLine}
       <p class="ley-nota">Los organismos tienen 15 días hábiles para gestionar según la Ley 1755 de 2015 — Derecho de Petición.</p>
     `;
 
@@ -813,6 +1000,7 @@
     // Mostrar resultado
     document.getElementById('resultado').style.display = 'block';
     document.getElementById('resultado').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('share-section').style.display = 'block';
   }
 
   function enviarAdicional() {
@@ -824,6 +1012,27 @@
     document.getElementById('texto-adicional').disabled = true;
     document.querySelector('.btn-adicional').disabled = true;
   }
+
+  function actualizarProgreso() {
+    const total = Object.values(respuestas).filter(v => v !== null && v !== '').length;
+    const pct = (total / 6 * 100) + '%';
+    document.getElementById('progreso').style.width = pct;
+    document.getElementById('progreso2').style.width = pct;
+    document.getElementById('sticky-count').textContent = total + ' / 6';
+    const completo = respuestas.zona && respuestas.ingreso && respuestas.agua &&
+      respuestas.educacion && respuestas.trabajo && respuestas.salud;
+    document.getElementById('btn-diagnostico').disabled = !completo;
+  }
+
+  function copiarLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      const c = document.getElementById('copy-confirm');
+      c.style.display = 'block';
+      setTimeout(() => { c.style.display = 'none'; }, 3000);
+    });
+  }
+
 </script>
 </body>
 </html>
